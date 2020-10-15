@@ -2,9 +2,14 @@ variable vpc_id {
   type = string
 }
 
-resource "aws_security_group" "my_app" {
-  name        = "myapp-security-group"
-  description = "hello world!"
+variable name {
+  type = string
+  default = "default-key"
+}
+
+resource "aws_security_group" "sg-template" {
+  name        = var.name
+  description = "{var.name} - hello world!"
   vpc_id = var.vpc_id
 
   ingress {
@@ -33,6 +38,6 @@ resource "aws_security_group" "my_app" {
 
 output "output_sg_id" {
     description = "output sg id"
-    value = aws_security_group.my_app.id
+    value = aws_security_group.sg-template.id
 }
 

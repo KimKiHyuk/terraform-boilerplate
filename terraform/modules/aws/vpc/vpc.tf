@@ -2,7 +2,7 @@ variable "cidr_block" {
   type = string
 }
 
-resource "aws_vpc" "aws_terraform_vpc" {
+resource "aws_vpc" "vpc-template" {
   tags = {
     Name = "myapp"
   }
@@ -11,6 +11,10 @@ resource "aws_vpc" "aws_terraform_vpc" {
 
 
 output "output_vpc_id" {
-  description = "output subnet id"
-  value = aws_vpc.aws_terraform_vpc.id
+  description = "output vpc id"
+  value = aws_vpc.vpc-template.id
+}
+
+output "output_default_route_table_id" {
+  value = aws_vpc.vpc-template.default_route_table_id
 }

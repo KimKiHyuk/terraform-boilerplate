@@ -17,7 +17,7 @@ variable "public_access" {
 }
 
 
-resource "aws_instance" "web" {
+resource "aws_instance" "instance-template" {
     ami = "ami-07efac79022b86107"
     instance_type = var.instance_type
     vpc_security_group_ids = var.sg_groups
@@ -29,5 +29,5 @@ resource "aws_instance" "web" {
 }
 
 output "instance_ip" {
-    value = aws_instance.web.public_ip
+    value = aws_instance.instance-template.public_ip
 }

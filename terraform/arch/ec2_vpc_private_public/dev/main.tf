@@ -94,6 +94,7 @@ module "aws_sg" {
 
 module "aws_ec2_public" {
     source = "../../../modules/aws/ec2"
+    name = "auto_generated_public_ec2"
     sg_groups = [module.aws_sg.output_sg_id]
     public_access = true
     subnet_id = module.aws_public_subnet.output_subnet_id
@@ -101,6 +102,7 @@ module "aws_ec2_public" {
 
 module "aws_ec2_private" {
     source = "../../../modules/aws/ec2"
+    name = "auto_generated_private_ec2"
     sg_groups = [module.aws_sg.output_sg_id]
     public_access = false
     subnet_id = module.aws_private_subnet.output_subnet_id

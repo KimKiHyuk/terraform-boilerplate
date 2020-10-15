@@ -16,6 +16,11 @@ variable "public_access" {
   default = false
 }
 
+variable "name" {
+    type = string
+    default = "myapp"
+}
+
 
 resource "aws_instance" "instance-template" {
     ami = "ami-07efac79022b86107"
@@ -23,7 +28,7 @@ resource "aws_instance" "instance-template" {
     vpc_security_group_ids = var.sg_groups
     subnet_id = var.subnet_id
     tags = {
-        Name = "myapp"
+        Name = var.name
     }
     associate_public_ip_address = var.public_access
 }

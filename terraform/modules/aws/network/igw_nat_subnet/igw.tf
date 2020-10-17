@@ -5,7 +5,3 @@ resource "aws_internet_gateway" "igw-template" {
     Name = var.tag_name
   }
 }
-
-output "igw_id" {
-  value = aws_internet_gateway.igw-template.id
-}

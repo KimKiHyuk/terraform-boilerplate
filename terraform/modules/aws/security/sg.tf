@@ -1,12 +1,3 @@
-variable vpc_id {
-  type = string
-}
-
-variable name {
-  type = string
-  default = "default-key"
-}
-
 resource "aws_security_group" "sg-template" {
   name        = var.name
   description = "{var.name} - hello world!"
@@ -34,10 +25,5 @@ resource "aws_security_group" "sg-template" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-}
-
-output "output_sg_id" {
-    description = "output sg id"
-    value = aws_security_group.sg-template.id
 }
 

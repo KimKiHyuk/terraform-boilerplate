@@ -10,6 +10,3 @@ resource "aws_nat_gateway" "ngw-template" {
   }
 }
 
-output "eip_ip" {
-    value= aws_eip.eip-template.public_ip
-}

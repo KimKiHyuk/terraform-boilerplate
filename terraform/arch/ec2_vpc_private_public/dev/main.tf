@@ -86,7 +86,7 @@ module "aws_sg" {
 }
 
 module "aws_ec2_public" {
-  source        = "../../../modules/aws/ec2"
+  source        = "../../../modules/aws/ec2/simple_ec2"
   name          = "auto_generated_public_ec2"
   sg_groups     = [module.aws_sg.sg_id]
   key_name      = module.aws_key_pair.key_name
@@ -95,7 +95,7 @@ module "aws_ec2_public" {
 }
 
 module "aws_ec2_private" {
-  source        = "../../../modules/aws/ec2"
+  source        = "../../../modules/aws/ec2/simple_ec2"
   name          = "auto_generated_private_ec2"
   sg_groups     = [module.aws_sg.sg_id]
   key_name      = module.aws_key_pair.key_name

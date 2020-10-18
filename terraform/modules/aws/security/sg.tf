@@ -1,7 +1,7 @@
 resource "aws_security_group" "sg-template" {
   name        = var.name
   description = "{var.name} - hello world!"
-  vpc_id = var.vpc_id
+  vpc_id      = var.vpc_id
 
   ingress {
     description = "Allow SSH"

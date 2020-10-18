@@ -7,5 +7,5 @@ output "ssh_public_key_pem" {
 }
 
 output "key_name" {
-    value = aws_key_pair.ssh.key_name
+  value = aws_key_pair.ssh.key_name
 }

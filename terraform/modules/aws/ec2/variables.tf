@@ -1,26 +1,26 @@
 variable "instance_type" {
-  type = string
+  type    = string
   default = "t2.micro"
 }
 
 variable "sg_groups" {
-    type = list(string)
+  type = list(string)
 }
 
 variable "subnet_id" {
-    type = string
-} 
+  type = string
+}
 
 variable "public_access" {
-  type = bool
+  type    = bool
   default = false
 }
 
 variable "name" {
-    type = string
-    default = "myapp"
+  type    = string
+  default = "myapp"
 }
 
 variable "key_name" {
-    type = string
+  type = string
 }

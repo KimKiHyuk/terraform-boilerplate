@@ -1,5 +1,5 @@
 variable "tag_name" {
-  type = string
+  type    = string
   default = "myapp"
 }
 

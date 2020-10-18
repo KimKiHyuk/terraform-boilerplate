@@ -11,17 +11,17 @@ module "aws_vpc" {
 }
 
 module "aws_private_subnet" {
-  source        = "../../../modules/aws/subnet"
-  cidr_block        = "10.10.21.0/24"
-  vpc_id        = module.aws_vpc.vpc_id
-  is_public = false # 변수명 변경
+  source     = "../../../modules/aws/subnet"
+  cidr_block = "10.10.21.0/24"
+  vpc_id     = module.aws_vpc.vpc_id
+  is_public  = false # 변수명 변경
 }
 
 module "aws_public_subnet" {
-  source        = "../../../modules/aws/subnet"
-  cidr_block        = "10.10.20.0/24" # cidr_block 으로 변경
-  vpc_id        = module.aws_vpc.vpc_id
-  is_public = true # 변수명 변경
+  source     = "../../../modules/aws/subnet"
+  cidr_block = "10.10.20.0/24" # cidr_block 으로 변경
+  vpc_id     = module.aws_vpc.vpc_id
+  is_public  = true # 변수명 변경
 }
 
 module "aws_vpc_network" {

@@ -2,7 +2,7 @@ variable "cidr_block" {
   type = string
 }
 variable "is_public" {
-  type = bool
+  type    = bool
   default = false
 }
 
@@ -11,6 +11,6 @@ variable "vpc_id" {
 }
 
 variable "tag_name" {
-  type = string
+  type    = string
   default = "myapp"
 }

@@ -5,5 +5,5 @@ resource "aws_subnet" "subnet-template" {
   }
 
   map_public_ip_on_launch = var.is_public
-  cidr_block = var.cidr_block
+  cidr_block              = var.cidr_block
 }

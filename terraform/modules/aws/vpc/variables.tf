@@ -3,6 +3,6 @@ variable "cidr_block" {
 }
 
 variable "tag_name" {
-  type = string
+  type    = string
   default = "myapp"
 }

@@ -1,5 +1,5 @@
 output "eip_ip" {
-    value= aws_eip.eip-template.public_ip
+  value = aws_eip.eip-template.public_ip
 }
 
 output "nat_gateway_id" {

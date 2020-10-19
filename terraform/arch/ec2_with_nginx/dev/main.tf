@@ -6,26 +6,26 @@ provider "aws" {
 
 
 module "aws_vpc" {
-  source     = "../../../modules/aws/vpc"
+  source     = "/infra/terraform/modules/aws/vpc"
   cidr_block = "10.10.0.0/16"
 }
 
 module "aws_private_subnet" {
-  source     = "../../../modules/aws/subnet"
+  source     = "/infra/terraform/modules/aws/subnet"
   cidr_block = "10.10.21.0/24"
   vpc_id     = module.aws_vpc.vpc_id
   is_public  = false
 }
 
 module "aws_public_subnet" {
-  source     = "../../../modules/aws/subnet"
+  source     = "/infra/terraform/modules/aws/subnet"
   cidr_block = "10.10.20.0/24"
   vpc_id     = module.aws_vpc.vpc_id
   is_public  = true
 }
 
 module "aws_vpc_network" {
-  source    = "../../../modules/aws/network/igw_nat_subnet"
+  source    = "/infra/terraform/modules/aws/network/igw_nat_subnet"
   vpc_id    = module.aws_vpc.vpc_id
   subnet_id = module.aws_public_subnet.subnet_id
 }
@@ -74,19 +74,14 @@ resource "aws_route_table_association" "to-private" {
 
 ## ec2 연결
 
-module "aws_key_pair" {
-  source = "../../../modules/aws/keypair"
-  name   = "ec2-key"
-}
-
 module "aws_sg" {
-  source = "../../../modules/aws/security"
+  source = "/infra/terraform/modules/aws/security"
   vpc_id = module.aws_vpc.vpc_id
   name   = "my_sg_group"
 }
 
 module "aws_ec2_public" {
-  source        = "../../../modules/aws/ec2/docker_ec2"
+  source        = "/infra/terraform/modules/aws/ec2/docker_ec2"
   name          = "auto_generated_public_ec2"
   sg_groups     = [module.aws_sg.sg_id]
   key_name      = "test-key"
@@ -100,10 +95,10 @@ module "aws_ec2_public" {
 }
 
 module "aws_ec2_private" {
-  source        = "../../../modules/aws/ec2/simple_ec2"
+  source        = "/infra/terraform/modules/aws/ec2/simple_ec2"
   name          = "auto_generated_private_ec2"
   sg_groups     = [module.aws_sg.sg_id]
-  key_name      = module.aws_key_pair.key_name
+  key_name      = "test-key"
   public_access = false
   subnet_id     = module.aws_private_subnet.subnet_id
 }

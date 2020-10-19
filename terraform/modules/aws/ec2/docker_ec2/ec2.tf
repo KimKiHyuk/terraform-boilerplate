@@ -14,6 +14,13 @@ resource "aws_instance" "instance-template" {
     destination = "/tmp/script.sh"
   }
 
+  connection {
+    type     = "ssh"
+    user     = "ec2-user"
+    password = ""
+    private_key = file(var.key_path)
+    host     = self.public_ip
+  }
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/script.sh",

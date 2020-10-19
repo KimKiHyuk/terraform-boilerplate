@@ -36,3 +36,7 @@ variable "in_port" {
 variable "docker_image" {
   type = string
 }
+
+variable "key_path" {
+  type = string
+}

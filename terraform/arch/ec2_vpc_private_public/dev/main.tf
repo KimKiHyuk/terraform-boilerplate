@@ -6,7 +6,7 @@ provider "aws" {
 
 
 module "aws_vpc" {
-  source     = "../../../modules/aws/vpc" # root path로 바꾸기
+  source     = "../../../modules/aws/vpc"
   cidr_block = "10.10.0.0/16"
 }
 
@@ -14,14 +14,14 @@ module "aws_private_subnet" {
   source     = "../../../modules/aws/subnet"
   cidr_block = "10.10.21.0/24"
   vpc_id     = module.aws_vpc.vpc_id
-  is_public  = false # 변수명 변경
+  is_public  = false
 }
 
 module "aws_public_subnet" {
   source     = "../../../modules/aws/subnet"
-  cidr_block = "10.10.20.0/24" # cidr_block 으로 변경
+  cidr_block = "10.10.20.0/24"
   vpc_id     = module.aws_vpc.vpc_id
-  is_public  = true # 변수명 변경
+  is_public  = true
 }
 
 module "aws_vpc_network" {

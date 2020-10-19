@@ -17,3 +17,6 @@ if [ -f "get-docker.sh" ]; then
     echo "remove file"
     rm get-docker.sh
 fi
+
+
+# polling으로 작업이 끝날 떄 까지 기다리다가, 모든 작업이 성공적으로 끝나면, message queue에 enqueue 하기 

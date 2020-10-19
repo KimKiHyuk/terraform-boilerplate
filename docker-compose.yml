@@ -6,3 +6,9 @@ services:
         volumes:
         - .:/infra
         working_dir: /infra
+
+    ubuntu:
+        image: ubuntu:latest
+        volumes:
+        - .:/key
+        working_dir: /key

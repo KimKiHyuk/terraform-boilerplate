@@ -10,16 +10,16 @@ resource "aws_instance" "instance-template" {
   associate_public_ip_address = var.public_access
 
   provisioner "file" {
-    source      = "../../../../../scripts/deploy_with_docker.sh"
+    source      = "/infra/terraform/scripts/deploy_with_docker.sh"
     destination = "/tmp/script.sh"
   }
 
   connection {
-    type     = "ssh"
-    user     = "ec2-user"
-    password = ""
+    type        = "ssh"
+    user        = "ubuntu"
+    password    = ""
     private_key = file(var.key_path)
-    host     = self.public_ip
+    host        = self.public_ip
   }
   provisioner "remote-exec" {
     inline = [

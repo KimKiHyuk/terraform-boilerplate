@@ -12,3 +12,9 @@ services:
         volumes:
         - .:/key
         working_dir: /key
+    
+    python:
+        image: python:3
+        volumes:
+        - .:/workspace
+        working_dir: /workspace

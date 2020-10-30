@@ -1,6 +1,6 @@
 variable "key_count" {
-    type = number
-    default = 1
+  type    = number
+  default = 1
 }
 
 variable "access_key" {

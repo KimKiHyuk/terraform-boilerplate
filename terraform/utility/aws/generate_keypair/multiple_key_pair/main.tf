@@ -5,7 +5,7 @@ provider "aws" {
 }
 
 module "multiple_key" {
-    source = "/infra/terraform/modules/aws/keypair"
-    count = var.key_count
-    name = "${var.name}-${count.index}"
+  source = "/infra/terraform/modules/aws/keypair"
+  count  = var.key_count
+  name   = "${var.name}-${count.index}"
 }

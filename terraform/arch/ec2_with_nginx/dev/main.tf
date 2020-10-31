@@ -89,8 +89,8 @@ module "aws_ec2_public" {
   subnet_id     = module.aws_public_subnet.subnet_id
 
   docker_image = "nginx" // specific docker image name
-  in_port      = "80" // specific port
-  out_port     = "80" // specific port
+  in_port      = "80"    // specific port
+  out_port     = "80"    // specific port
   key_path     = "./test-key.pem"
 }
 

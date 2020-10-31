@@ -33,7 +33,7 @@ module "cluster_igw" {
   tag_name = "ecs-igw"
 }
 
-resource "aws_route_table" "public-route" {
+resource "aws_route_table" "public_route" {
   vpc_id = module.cluster_vpc.vpc_id
   route {
     cidr_block = "0.0.0.0/0"
@@ -45,13 +45,20 @@ resource "aws_route_table" "public-route" {
   }
 }
 
+resource "aws_route_table_association" "to-public" {
+  count          = "${length(aws_subnet.cluster)}"
+  subnet_id      = aws_subnet.cluster[count.index].id
+  route_table_id = aws_route_table.public_route.id
+}
+
+
 
 # --- sg
 
 
 resource "aws_security_group" "lb" {
   vpc_id = module.cluster_vpc.vpc_id
-  name = "lb-sg"
+  name   = "lb-sg"
   ingress {
     protocol    = "tcp"
     from_port   = 80
@@ -69,7 +76,7 @@ resource "aws_security_group" "lb" {
 
 resource "aws_security_group" "ecs_tasks" {
   vpc_id = module.cluster_vpc.vpc_id
-  name = "ecs-tasks-sg"
+  name   = "ecs-tasks-sg"
 
   ingress {
     protocol        = "tcp"
@@ -250,6 +257,16 @@ resource "aws_ecs_service" "staging" {
   }
 
   depends_on = [aws_lb_listener.https_forward, aws_iam_role_policy_attachment.ecs_task_execution_role]
+
+  tags = {
+    Environment = "staging"
+    Application = "bobapp"
+  }
+}
+
+
+resource "aws_cloudwatch_log_group" "bobapp" {
+  name = "awslogs-bobapp-staging"
 
   tags = {
     Environment = "staging"

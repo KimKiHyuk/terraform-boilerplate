@@ -11,16 +11,13 @@ module "cluster_vpc" {
   tag_name   = "ecs-vpc"
 }
 
-data "aws_availability_zones" "available" {
-
-}
+data "aws_availability_zones" "available" {}
 
 resource "aws_subnet" "cluster" {
   vpc_id                  = module.cluster_vpc.vpc_id
   count                   = "${length(data.aws_availability_zones.available.names)}"
   cidr_block              = "10.30.${10 + count.index}.0/24"
   availability_zone       = "${data.aws_availability_zones.available.names[count.index]}"
-  map_public_ip_on_launch = true
   tags = {
     Name = "ecs-subnet"
   }

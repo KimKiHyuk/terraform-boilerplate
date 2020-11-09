@@ -79,14 +79,13 @@ resource "aws_route_table_association" "to-private" {
 
 module "public_aws_key_pair" {
   source = "../../../modules/aws/keypair"
-  count = var.public_cnt
-  name   = "${count.index}::public-ec2-key"
+  name   = "ec2::public::key"
 }
 
 module "private_aws_key_pair" {
   source = "../../../modules/aws/keypair"
-  count = var.private_cnt
-  name   = "${count.index}::private-ec2-key"
+  count  = length(local.json_data.privateData.server)
+  name   = local.json_data.privateData.server[count.index].name
 }
 
 module "aws_sg" {
@@ -97,18 +96,18 @@ module "aws_sg" {
 
 module "aws_ec2_public" {
   source        = "../../../modules/aws/ec2/simple_ec2"
-  count         = var.public_cnt
-  name          = "${count.index}::auto_generated_public_ec2"
+  count         = length(local.json_data.publicData.server.*)
+  name          = local.json_data.publicData.server[count.index].name
   sg_groups     = [module.aws_sg.sg_id]
-  key_name      = module.public_aws_key_pair[count.index].key_name
+  key_name      = module.public_aws_key_pair.key_name
   public_access = true
   subnet_id     = module.aws_public_subnet.subnet_id
 }
 
 module "aws_ec2_private" {
   source        = "../../../modules/aws/ec2/simple_ec2"
-  count         = var.private_cnt
-  name          = "${count.index}::auto_generated_private_ec2"
+  count         = length(local.json_data.privateData.server)
+  name          = local.json_data.privateData.server[count.index].name
   sg_groups     = [module.aws_sg.sg_id]
   key_name      = module.private_aws_key_pair[count.index].key_name
   public_access = false

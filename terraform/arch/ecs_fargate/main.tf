@@ -14,10 +14,10 @@ module "cluster_vpc" {
 data "aws_availability_zones" "available" {}
 
 resource "aws_subnet" "cluster" {
-  vpc_id                  = module.cluster_vpc.vpc_id
-  count                   = "${length(data.aws_availability_zones.available.names)}"
-  cidr_block              = "10.30.${10 + count.index}.0/24"
-  availability_zone       = "${data.aws_availability_zones.available.names[count.index]}"
+  vpc_id            = module.cluster_vpc.vpc_id
+  count             = "${length(data.aws_availability_zones.available.names)}"
+  cidr_block        = "10.30.${10 + count.index}.0/24"
+  availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
   tags = {
     Name = "ecs-subnet"
   }

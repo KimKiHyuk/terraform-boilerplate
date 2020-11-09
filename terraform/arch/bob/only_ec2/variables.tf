@@ -1,5 +1,5 @@
 variable "root_path" {
-  type = string
+  type    = string
   default = "."
 }
 variable "access_key" {
@@ -13,13 +13,4 @@ variable "secret_key" {
 variable "region" {
   type    = string
   default = "us-east-2"
-}
-
-variable "public_cnt" {
-    type = number
-}
-
-
-variable "private_cnt" {
-    type = number
 }

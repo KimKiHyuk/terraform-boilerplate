@@ -5,7 +5,7 @@ provider "aws" {
 }
 
 locals {
-  json_data = jsondecode(file("./data.json"))
+  json_data = jsondecode(file("${var.src}"))
 }
 
 module "aws_vpc" {

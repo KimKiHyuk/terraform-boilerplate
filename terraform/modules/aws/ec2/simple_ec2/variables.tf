@@ -24,3 +24,7 @@ variable "name" {
 variable "key_name" {
   type = string
 }
+
+variable "ami" {
+  type = string
+}

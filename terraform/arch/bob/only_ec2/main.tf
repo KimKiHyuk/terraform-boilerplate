@@ -92,7 +92,7 @@ resource "aws_route_table_association" "to-private" {
 
 module "public_aws_key_pair" {
   source = "../../../modules/aws/keypair"
-  name   = "ec2::public::key"
+  name   = local.json_data.publicData.key
 }
 
 module "private_aws_key_pair" {

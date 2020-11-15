@@ -1,3 +1,16 @@
+terraform {
+  required_providers {
+    aws = {
+      version = "~> 3.13.0"
+      source = "hashicorp/aws"
+    }
+    tls = {
+      version = "~> 3.0.0"
+      source = "hashicorp/tls"
+    }
+  }
+}
+
 provider "aws" {
   access_key = var.access_key
   secret_key = var.secret_key

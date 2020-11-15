@@ -121,6 +121,7 @@ module "aws_ec2_public" {
 module "aws_ec2_private" {
   source        = "../../../modules/aws/ec2/simple_ec2"
   count         = length(local.json_data.privateData.server)
+  ami           = var.ami
   name          = local.json_data.privateData.server[count.index].name
   sg_groups     = [module.aws_sg.sg_id]
   key_name      = module.private_aws_key_pair[count.index].key_name

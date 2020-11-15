@@ -18,3 +18,7 @@ variable "region" {
 variable "src" {
   type    = string
 }
+
+variable "ami" {
+  type    = string
+}

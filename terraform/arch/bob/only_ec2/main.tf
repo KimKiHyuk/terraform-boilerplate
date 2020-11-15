@@ -110,6 +110,7 @@ module "aws_sg" {
 module "aws_ec2_public" {
   source        = "../../../modules/aws/ec2/simple_ec2"
   count         = length(local.json_data.publicData.server.*)
+  ami           = var.ami
   name          = local.json_data.publicData.server[count.index].name
   sg_groups     = [module.aws_sg.sg_id]
   key_name      = module.public_aws_key_pair.key_name

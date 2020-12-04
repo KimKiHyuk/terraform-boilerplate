@@ -7,17 +7,19 @@ provider "aws" {
 
 module "cluster_vpc" {
   source     = "../../modules/aws/vpc"
-  cidr_block = "10.30.0.0/16"
+  cidr_block = "10.10.0.0/16"
   tag_name   = "ecs-vpc"
 }
 
-data "aws_availability_zones" "available" {}
+data "aws_availability_zones" "available" {
+
+}
 
 resource "aws_subnet" "cluster" {
-  vpc_id            = module.cluster_vpc.vpc_id
-  count             = "${length(data.aws_availability_zones.available.names)}"
-  cidr_block        = "10.30.${10 + count.index}.0/24"
-  availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
+  vpc_id                  = module.cluster_vpc.vpc_id
+  count                   = "${length(data.aws_availability_zones.available.names)}"
+  cidr_block              = "10.30.${10 + count.index}.0/24"
+  availability_zone       = "${data.aws_availability_zones.available.names[count.index]}"
   tags = {
     Name = "ecs-subnet"
   }
@@ -102,7 +104,7 @@ resource "aws_lb" "staging" {
 
   tags = {
     Environment = "staging"
-    Application = "bobapp"
+    Application = "cloud-computing"
   }
 }
 
@@ -118,7 +120,7 @@ resource "aws_lb_listener" "https_forward" {
 }
 
 resource "aws_lb_target_group" "staging" {
-  name        = "bobapp-alb-tg"
+  name        = "cloud-computing-alb-tg"
   port        = 80
   protocol    = "HTTP"
   vpc_id      = module.cluster_vpc.vpc_id
@@ -207,8 +209,8 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role" {
 }
 
 
-data "template_file" "bobapp" {
-  template = file("/home/key/repository/ec2-backend/terraform-boilerplate/terraform/arch/ecs_fargate/bobapp.json.tpl")
+data "template_file" "cloud-computing" {
+  template = file("/home/key/repository/ec2-backend/terraform-boilerplate/terraform/arch/ecs_fargate/cloud-computing.json.tpl")
   vars = {
     aws_ecr_repository = aws_ecr_repository.repo.repository_url
     tag                = "latest"
@@ -217,21 +219,21 @@ data "template_file" "bobapp" {
 }
 
 resource "aws_ecs_task_definition" "service" {
-  family                   = "bobapp-staging"
+  family                   = "cloud-computing-staging"
   network_mode             = "awsvpc"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   cpu                      = 256
   memory                   = 2048
   requires_compatibilities = ["FARGATE"]
-  container_definitions    = data.template_file.bobapp.rendered
+  container_definitions    = data.template_file.cloud-computing.rendered
   tags = {
     Environment = "staging"
-    Application = "bobapp"
+    Application = "cloud-computing"
   }
 }
 
 resource "aws_ecs_cluster" "staging" {
-  name = "bobapp-ecs-cluster"
+  name = "cloud-computing-ecs-cluster"
 }
 
 resource "aws_ecs_service" "staging" {
@@ -249,7 +251,7 @@ resource "aws_ecs_service" "staging" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.staging.arn
-    container_name   = "bobapp"
+    container_name   = "cloud-computing"
     container_port   = 3000
   }
 
@@ -257,16 +259,16 @@ resource "aws_ecs_service" "staging" {
 
   tags = {
     Environment = "staging"
-    Application = "bobapp"
+    Application = "cloud-computing"
   }
 }
 
 
-resource "aws_cloudwatch_log_group" "bobapp" {
-  name = "awslogs-bobapp-staging"
+# resource "aws_cloudwatch_log_group" "cloud-computing" {
+#   name = "awslogs-cloud-computing-staging"
 
-  tags = {
-    Environment = "staging"
-    Application = "bobapp"
-  }
-}
+#   tags = {
+#     Environment = "staging"
+#     Application = "cloud-computing"
+#   }
+# }

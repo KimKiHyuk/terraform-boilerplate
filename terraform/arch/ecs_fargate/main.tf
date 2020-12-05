@@ -18,7 +18,7 @@ data "aws_availability_zones" "available" {
 resource "aws_subnet" "cluster" {
   vpc_id                  = module.cluster_vpc.vpc_id
   count                   = "${length(data.aws_availability_zones.available.names)}"
-  cidr_block              = "10.30.${10 + count.index}.0/24"
+  cidr_block              = "10.10.${10 + count.index}.0/24"
   availability_zone       = "${data.aws_availability_zones.available.names[count.index]}"
   tags = {
     Name = "ecs-subnet"
@@ -79,8 +79,8 @@ resource "aws_security_group" "ecs_tasks" {
 
   ingress {
     protocol        = "tcp"
-    from_port       = 3000
-    to_port         = 3000
+    from_port       = 9000
+    to_port         = 9000
     cidr_blocks     = ["0.0.0.0/0"]
     security_groups = [aws_security_group.lb.id]
   }
@@ -141,7 +141,7 @@ resource "aws_lb_target_group" "staging" {
 # -- make ecr
 
 resource "aws_ecr_repository" "repo" {
-  name = "keykim/deploy"
+  name = "keykim/cloud-computing"
 }
 
 
@@ -210,7 +210,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role" {
 
 
 data "template_file" "cloud-computing" {
-  template = file("/home/key/repository/ec2-backend/terraform-boilerplate/terraform/arch/ecs_fargate/cloud-computing.json.tpl")
+  template = file("/home/key/repository/Fargate-terraform-githubactions/terraform-boilerplate/terraform/arch/ecs_fargate/cloud-computing.json.tpl")
   vars = {
     aws_ecr_repository = aws_ecr_repository.repo.repository_url
     tag                = "latest"
@@ -252,7 +252,7 @@ resource "aws_ecs_service" "staging" {
   load_balancer {
     target_group_arn = aws_lb_target_group.staging.arn
     container_name   = "cloud-computing"
-    container_port   = 3000
+    container_port   = 9000
   }
 
   depends_on = [aws_lb_listener.https_forward, aws_iam_role_policy_attachment.ecs_task_execution_role]
@@ -264,11 +264,11 @@ resource "aws_ecs_service" "staging" {
 }
 
 
-# resource "aws_cloudwatch_log_group" "cloud-computing" {
-#   name = "awslogs-cloud-computing-staging"
+resource "aws_cloudwatch_log_group" "cloud-computing" {
+  name = "awslogs-cloud-computing-staging"
 
-#   tags = {
-#     Environment = "staging"
-#     Application = "cloud-computing"
-#   }
-# }
+  tags = {
+    Environment = "staging"
+    Application = "cloud-computing"
+  }
+}

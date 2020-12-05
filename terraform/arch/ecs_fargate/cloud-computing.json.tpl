@@ -1,14 +1,14 @@
 [
   {
-    "name": "cloud_computing",
+    "name": "cloud-computing",
     "image": "${aws_ecr_repository}:${tag}",
     "essential": true,
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
         "awslogs-region": "us-east-2",
-        "awslogs-stream-prefix": "cloud_computing-staging-service",
-        "awslogs-group": "awslogs-cloud_computing-staging"
+        "awslogs-stream-prefix": "cloud-computing-staging-service",
+        "awslogs-group": "awslogs-cloud-computing-staging"
       }
     },
     "portMappings": [

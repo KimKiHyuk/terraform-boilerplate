@@ -23,6 +23,24 @@ resource "aws_subnet" "cluster" {
   }
 }
 
+# create route53
+
+module "route53" {
+  source = "../../modules/aws/domain"
+  name   = "front_domain"
+  lb = {
+    dns_name = aws_lb.staging.dns_name
+    zone_id  = aws_lb.staging.zone_id
+  }
+}
+
+
+# ----
+
+
+
+
+
 
 module "cluster_igw" {
   source   = "../../modules/aws/network/igw"
@@ -106,16 +124,16 @@ resource "aws_lb" "staging" {
   }
 }
 
-resource "aws_lb_listener" "https_forward" {
-  load_balancer_arn = aws_lb.staging.arn
-  port              = 80
-  protocol          = "HTTP"
+# resource "aws_lb_listener" "https_forward" {
+#   load_balancer_arn = aws_lb.staging.arn
+#   port              = 80
+#   protocol          = "HTTP"
 
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.staging.arn
-  }
-}
+#   default_action {
+#     type             = "forward"
+#     target_group_arn = aws_lb_target_group.staging.arn
+#   }
+# }
 
 resource "aws_lb_target_group" "staging" {
   name        = "bobapp-alb-tg"
@@ -253,7 +271,7 @@ resource "aws_ecs_service" "staging" {
     container_port   = 3000
   }
 
-  depends_on = [aws_lb_listener.https_forward, aws_iam_role_policy_attachment.ecs_task_execution_role]
+  depends_on = [aws_lb.staging, aws_iam_role_policy_attachment.ecs_task_execution_role]
 
   tags = {
     Environment = "staging"

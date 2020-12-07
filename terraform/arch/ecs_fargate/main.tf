@@ -2,6 +2,7 @@ provider "aws" {
   access_key = var.access_key
   secret_key = var.secret_key
   region     = var.region
+
 }
 
 
@@ -15,11 +16,43 @@ data "aws_availability_zones" "available" {
 
 }
 
+
+resource "aws_s3_bucket" "log_storage" {
+  bucket = "service-log-vkhs14z9"
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::033677994240:root"
+      },
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::service-log-vkhs14z9/*"
+    }
+  ]
+}
+  EOF
+
+  lifecycle_rule {
+    id      = "log_lifecycle"
+    prefix  = ""
+    enabled = true
+
+    expiration {
+      days = 10
+    }
+  }
+
+  force_destroy = true
+}
+
 resource "aws_subnet" "cluster" {
-  vpc_id                  = module.cluster_vpc.vpc_id
-  count                   = "${length(data.aws_availability_zones.available.names)}"
-  cidr_block              = "10.10.${10 + count.index}.0/24"
-  availability_zone       = "${data.aws_availability_zones.available.names[count.index]}"
+  vpc_id            = module.cluster_vpc.vpc_id
+  count             = "${length(data.aws_availability_zones.available.names)}"
+  cidr_block        = "10.10.${10 + count.index}.0/24"
+  availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
   tags = {
     Name = "ecs-subnet"
   }
@@ -27,21 +60,14 @@ resource "aws_subnet" "cluster" {
 
 # create route53
 
-module "route53" {
-  source = "../../modules/aws/domain"
-  name   = "front_domain"
+module "domain" {
+  source = "../../modules/aws/domain/attach"
+  name   = "keykim.me"
   lb = {
     dns_name = aws_lb.staging.dns_name
     zone_id  = aws_lb.staging.zone_id
   }
 }
-
-
-# ----
-
-
-
-
 
 
 module "cluster_igw" {
@@ -83,6 +109,13 @@ resource "aws_security_group" "lb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    protocol    = "tcp"
+    from_port   = 443
+    to_port     = 443
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     protocol    = "-1"
     from_port   = 0
@@ -120,22 +153,47 @@ resource "aws_lb" "staging" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.lb.id]
 
+  access_logs {
+    bucket  = aws_s3_bucket.log_storage.id
+    prefix  = "frontend-alb"
+    enabled = true
+  }
+
   tags = {
     Environment = "staging"
     Application = "cloud-computing"
   }
 }
 
-# resource "aws_lb_listener" "https_forward" {
-#   load_balancer_arn = aws_lb.staging.arn
-#   port              = 80
-#   protocol          = "HTTP"
+resource "aws_lb_listener" "https_forward" {
+  load_balancer_arn = aws_lb.staging.arn
+  port              = 443
+  protocol          = "HTTPS"
+  certificate_arn   = module.domain.cert_arn
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
 
-#   default_action {
-#     type             = "forward"
-#     target_group_arn = aws_lb_target_group.staging.arn
-#   }
-# }
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.staging.arn
+  }
+}
+
+
+resource "aws_lb_listener" "http_forward" {
+  load_balancer_arn = aws_lb.staging.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
 
 resource "aws_lb_target_group" "staging" {
   name        = "cloud-computing-alb-tg"
@@ -145,13 +203,17 @@ resource "aws_lb_target_group" "staging" {
   target_type = "ip"
 
   health_check {
-    healthy_threshold   = "3"
-    interval            = "90"
-    protocol            = "HTTP"
-    matcher             = "200-299"
-    timeout             = "20"
+    enabled             = true
+    interval            = 300
     path                = "/"
-    unhealthy_threshold = "2"
+    timeout             = 60
+    matcher             = "200"
+    healthy_threshold   = 5
+    unhealthy_threshold = 5
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
@@ -273,7 +335,7 @@ resource "aws_ecs_service" "staging" {
     container_port   = 9000
   }
 
-  depends_on = [aws_lb.staging, aws_iam_role_policy_attachment.ecs_task_execution_role]
+  depends_on = [aws_lb_listener.https_forward, aws_lb_listener.http_forward, aws_iam_role_policy_attachment.ecs_task_execution_role]
 
   tags = {
     Environment = "staging"

@@ -33,12 +33,12 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role" {
 data "template_file" "service" {
   template = file(var.tpl_path)
   vars = {
-    region = var.region
+    region             = var.region
     aws_ecr_repository = aws_ecr_repository.repo.repository_url
     tag                = "latest"
     container_port     = var.container_port
-    host_port  = var.host_port
-    app_name = var.app_name
+    host_port          = var.host_port
+    app_name           = var.app_name
   }
 }
 

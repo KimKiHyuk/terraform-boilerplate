@@ -17,4 +17,3 @@ Repository for multiple cloud infrastructure code using terraform
 | ------------- | -----:|
 | terraform/      | modular workspace (just for me) |
 | example/         |  Monolithic workspace (easy to use)  |
-

@@ -1,10 +1,20 @@
-## terraform boilerplate
+# terraform boilerplate
 
-for multiple infra strategy
+Repository for multiple cloud infrastructure code using terraform
 
-
-This boilerplate takes into account REST API.
-So if you want to use variable as a file, you should create **.tfvars
+* terrform : v0.13.3
 
 
-https://tg4.solutions/how-to-use-terraform-tfvars/
+## support infrastructure
+1. AWS ECS Fargate with route53
+2. EC2 with private - public subnet using NAT   
+
+## Folder hierachy
+
+
+
+| folder        |  usage  |
+| ------------- | -----:|
+| terraform/      | modular workspace (just for me) |
+| example/         |  Monolithic workspace (easy to use)  |
+

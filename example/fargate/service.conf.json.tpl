@@ -8,7 +8,7 @@
       "options": {
         "awslogs-region": "${region}",
         "awslogs-stream-prefix": "staging-service",
-        "awslogs-group": "awslogs-staging"
+        "awslogs-group": "awslogs-service-staging"
       }
     },
     "portMappings": [

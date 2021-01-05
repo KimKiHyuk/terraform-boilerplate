@@ -18,7 +18,7 @@
         "protocol": "tcp"
       }
     ],
-    "cpu": 2,
+    "cpu": 256,
     "environment": [
       {
         "name": "PORT",
@@ -33,7 +33,7 @@
       }
     ],
     "mountPoints": [],
-    "memory": 2048,
+    "memory": 512,
     "volumesFrom": []
   }
 ]

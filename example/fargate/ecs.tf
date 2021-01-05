@@ -41,7 +41,7 @@ resource "aws_ecs_task_definition" "service" {
   network_mode             = "awsvpc"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   cpu                      = 256
-  memory                   = 2048
+  memory                   = 512
   requires_compatibilities = ["FARGATE"]
   container_definitions    = data.template_file.service.rendered
   tags = {

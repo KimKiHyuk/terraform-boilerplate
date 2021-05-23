@@ -50,9 +50,9 @@ resource "aws_s3_bucket" "log_storage" {
 
 resource "aws_subnet" "cluster" {
   vpc_id            = module.cluster_vpc.vpc_id
-  count             = "${length(data.aws_availability_zones.available.names)}"
+  count             = length(data.aws_availability_zones.available.names)
   cidr_block        = "10.10.${10 + count.index}.0/24"
-  availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
+  availability_zone = data.aws_availability_zones.available.names[count.index]
   tags = {
     Name = "ecs-subnet"
   }
@@ -89,7 +89,7 @@ resource "aws_route_table" "public_route" {
 }
 
 resource "aws_route_table_association" "to-public" {
-  count          = "${length(aws_subnet.cluster)}"
+  count          = length(aws_subnet.cluster)
   subnet_id      = aws_subnet.cluster[count.index].id
   route_table_id = aws_route_table.public_route.id
 }

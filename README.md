@@ -7,7 +7,8 @@ Repository for multiple cloud infrastructure code using terraform
 
 ## support infrastructure
 1. AWS ECS Fargate with route53
-2. EC2 with private - public subnet using NAT   
+2. EC2 with private - public subnet using NAT
+3. lambda
 
 ## Folder hierachy
 
@@ -15,6 +16,5 @@ Repository for multiple cloud infrastructure code using terraform
 
 | folder        |  usage  |
 | ------------- | -----:|
-| terraform/      | modular workspace (just for me) |
-| example/         |  Monolithic workspace (easy to use)  |
-
+| example/         |  maintain  |
+| legacy/      | not maintained |

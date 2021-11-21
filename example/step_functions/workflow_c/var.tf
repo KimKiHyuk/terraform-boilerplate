@@ -1,6 +1,6 @@
 variable "region" {}
 variable "account_id" {}
-variable  "memory_size" {}
+variable "memory_size" {}
 variable "timeout" {}
 variable "ecr_repo_name" {}
 variable "iam_role_name" {}

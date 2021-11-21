@@ -4,5 +4,5 @@ data "aws_iam_policy" "step_function_policy" {
 
 
 locals {
-    simple_workflow = "test-sfn-workflow"
+  simple_workflow = "test-sfn-workflow"
 }

@@ -83,7 +83,7 @@ resource "aws_iam_policy" "step_function_policy" {
   path        = "/"
   description = "IAM policy for step"
 
-  policy  = <<-EOF
+  policy = <<-EOF
   {
     "Version": "2012-10-17",
     "Statement": [

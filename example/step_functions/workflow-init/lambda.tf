@@ -1,6 +1,6 @@
 data "archive_file" "env" {
   type        = "zip"
-  source_dir = "${path.module}/env"
+  source_dir  = "${path.module}/env"
   output_path = "${path.module}/env.zip"
 }
 
@@ -9,7 +9,7 @@ locals {
 }
 
 data "aws_ecr_repository" "repo" {
-  name                 = var.ecr_repo_name
+  name = var.ecr_repo_name
 }
 
 data "aws_ecr_image" "image" {
@@ -39,7 +39,7 @@ resource "null_resource" "ecr_image" {
     python_file  = md5(file("${path.module}/index.py"))
     docker_file  = md5(file("${path.module}/Dockerfile"))
     requirements = md5(file("${path.module}/requirements.txt"))
-    env_hash = data.archive_file.env.output_sha
+    env_hash     = data.archive_file.env.output_sha
   }
 
   provisioner "local-exec" {
@@ -67,7 +67,7 @@ resource "aws_lambda_function" "lambda" {
 
 
 resource "aws_iam_role" "lambda_role" {
-  name =  var.iam_role_name
+  name = var.iam_role_name
 
   assume_role_policy = <<EOF
 {

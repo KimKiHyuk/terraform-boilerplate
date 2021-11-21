@@ -42,15 +42,15 @@ resource "aws_sfn_state_machine" "sfn_state_machine" {
 }
 EOF
 
-    logging_configuration {
-        include_execution_data = true
-        level= "ALL"
-        log_destination = "${aws_cloudwatch_log_group.simple_workflow_log_group.arn}:*"
-    }
+  logging_configuration {
+    include_execution_data = true
+    level                  = "ALL"
+    log_destination        = "${aws_cloudwatch_log_group.simple_workflow_log_group.arn}:*"
+  }
 
-    tracing_configuration {
-        enabled = false
-    }
+  tracing_configuration {
+    enabled = false
+  }
 }
 
 

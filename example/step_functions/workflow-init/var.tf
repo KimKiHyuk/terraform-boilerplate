@@ -1,0 +1,10 @@
+variable "region" {}
+variable "account_id" {}
+variable  "memory_size" {}
+variable "timeout" {}
+variable "ecr_repo_name" {}
+variable "iam_role_name" {}
+variable "function_name" {}
+variable "lambda_policy_name" {}
+variable "logging_policy_name" {}
+variable "sfn_policy_name" {}

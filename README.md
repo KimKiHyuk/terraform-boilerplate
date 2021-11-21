@@ -10,7 +10,7 @@ Repository for multiple cloud infrastructure code using terraform
 2. EC2 with private - public subnet using NAT
 3. lambda
 4. step function
-5. EKS (WIP)
+5. EKS + fargate (WIP)
 
 ## Folder hierachy
 
